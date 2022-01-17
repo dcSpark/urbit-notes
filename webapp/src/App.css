@@ -1,0 +1,97 @@
+.App {
+  text-align: center;
+  width: 80%;
+  margin: auto;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.create-button {
+  height: 2rem;
+}
+.error-message {
+  color: red;
+  margin: auto;
+}
+.notebook {
+  height: 100vh;
+}
+
+.composer {
+  width: 60%;
+  margin: auto;
+  position: relative;
+}
+.composer .row-1 {
+  display: flex;
+}
+.composer input {
+  display: block;
+  height: 2rem;
+  width: 90%;
+}
+.composer textarea {
+  outline: none;
+  width: 100%;
+  resize: none;
+  box-sizing: border-box;
+}
+.post-list {
+  width: 60%;
+  height: 62%;
+  overflow-y: scroll;
+  margin: auto;
+}
+.post-preview {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+.post-preview p {
+  margin: 0.2rem;
+}
+.post-preview-header {
+  border-bottom: 1px solid grey;
+}
+.post-preview:hover {
+  border: 1px solid grey;
+}
+.post-preview-title {
+  width: 80%;
+  text-align: left;
+}
+.post-preview-date {
+  width: 20%;
+  text-align: right;
+}
+.loading .spinner {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.composer .spinner {
+  position: absolute;
+  top: 90px;
+  left: 320px;
+}
