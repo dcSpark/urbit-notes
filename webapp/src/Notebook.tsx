@@ -15,6 +15,7 @@ function Notebook(props: NotebookProps) {
         path: `/graph/~${props.ship}/my-urbit-notes`,
       })
       .then((res) => {
+        console.log(res, "scried")
         setPosts({
           type: "add-post",
           payload: res.response["graph-update"]["add-graph"]["graph"],
@@ -55,7 +56,6 @@ function Notebook(props: NotebookProps) {
   const spinner = (
     <Spinner width={40} height={40} innerColor="white" outerColor="black" />
   );
-  // const [posts, setPosts] = useState<Graph>({});
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<Post>(null);
@@ -69,7 +69,7 @@ function Notebook(props: NotebookProps) {
       signatures: [],
       "time-sent": Date.now(),
     };
-  }
+  };
   function addNotebookPost() {
     setLoading(true);
     const indexes: number[] = graphToList(posts).map((p) => p.index);
@@ -186,7 +186,7 @@ function Notebook(props: NotebookProps) {
           revisions: revisions,
         };
       })
-      .reverse(); // graphs are already ordered descending by index, reverse it so now notes show up first
+      .reverse(); // graphs are already ordered descending by index, reverse it so new notes show up first
   }
 
   function select(post: Post) {

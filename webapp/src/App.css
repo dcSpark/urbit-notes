@@ -95,3 +95,7 @@
   top: 90px;
   left: 320px;
 }
+
+.post-list::-webkit-scrollbar {
+  display: none;
+}
