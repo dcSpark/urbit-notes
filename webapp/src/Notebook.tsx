@@ -21,7 +21,8 @@ function Notebook(props: NotebookProps) {
         });
         setLoading(false);
       });
-    urbitVisor.on("sse", ["graph-update", "add-nodes"], handleGraphUpdate);
+    urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
+    urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
     urbitVisor.subscribe({ app: "graph-store", path: "/updates" });
   }, []);
 
@@ -42,9 +43,7 @@ function Notebook(props: NotebookProps) {
         const base_index = Object.keys(action.payload)[0].split("/")[1];
         const revision = Object.keys(action.payload)[0].split("/")[3];
         const post = state[base_index];
-        console.log(post, "post to update");
         post.children["1"].children[revision] = action.payload[index];
-        console.log(post, "updated post");
         const editedPost = {};
         editedPost[base_index] = post;
         return { ...state, ...editedPost };
@@ -109,8 +108,28 @@ function Notebook(props: NotebookProps) {
     urbitVisor
       .poke({ app: "graph-store", mark: "graph-update-3", json: body })
       .then((res) => console.log(res));
-  }
-  function editPost() {
+  };
+ 
+  function editPost(){
+    if (title === "" && text === "") deletePost();
+    else modifyPost();
+  };
+  function deletePost() {
+    setLoading(true);
+    const body = {
+      "remove-posts": {
+        resource: {
+          ship: `~${props.ship}`,
+          name: "my-urbit-notes",
+        },
+        indices: [`/${selected.index}`],
+      },
+    };
+    urbitVisor
+    .poke({ app: "graph-store", mark: "graph-update-3", json: body })
+    .then((res) => console.log(res));
+  };
+  function modifyPost() {
     setLoading(true);
     const last: number = Object.keys(selected.revisions).reduce(
       (acc: number, item: string) =>
@@ -135,12 +154,17 @@ function Notebook(props: NotebookProps) {
       .then((res) => console.log(res));
   }
 
-  function handleGraphUpdate(data: any) {
+  function handleAddNodes(data: any) {
     setLoading(false);
     if (Object.keys(data.nodes)[0].split("/").length > 3)
       //  if it's an update an edited post, go update the post
       setPosts({ type: "edit-post", payload: data.nodes });
     else setPosts({ type: "add-post", payload: data.nodes }); // if it's an update about a new post, go add the post to the post list
+  };
+  function handleRemovePosts(data: any){
+    setLoading(false);
+    const [index] = data.indices;
+    setPosts({type: "delete-post", payload: index.replace("/", "")});
   }
 
   function graphToList(graph: Graph): Post[] {
@@ -238,4 +262,4 @@ function PostPreview(props: PostProps) {
       </div>
     </div>
   );
-};
+}
