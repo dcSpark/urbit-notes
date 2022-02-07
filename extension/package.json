@@ -4,8 +4,8 @@
   "description": "Urbit notes everywhere",
   "main": "content.js",
   "scripts": {
-    "start": "esbuild src/content.ts --outfile=dist/content.js --bundle --watch --loader:.png=dataurl",
-    "build": "esbuild src/content.ts --outfile=dist/content.js --bundle --loader:.png=dataurl",
+    "start": "esbuild src/content.ts --outfile=dist/content.js && esbuild src/popup.ts --outfile=dist/popup.js --bundle --watch",
+    "build": "esbuild src/content.ts --outfile=dist/content.js --loader:.png=dataurl",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
