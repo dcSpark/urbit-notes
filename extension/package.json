@@ -1,0 +1,17 @@
+{
+  "name": "une",
+  "version": "1.0.0",
+  "description": "Urbit notes everywhere",
+  "main": "content.js",
+  "scripts": {
+    "start": "esbuild src/content.ts --outfile=dist/content.js --bundle --watch --loader:.png=dataurl",
+    "build": "esbuild src/content.ts --outfile=dist/content.js --bundle --loader:.png=dataurl",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dcspark/uv-core": "^0.3.1",
+    "esbuild": "^0.14.18"
+  }
+}
