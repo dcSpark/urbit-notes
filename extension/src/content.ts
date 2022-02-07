@@ -8,7 +8,7 @@ document.addEventListener("keydown", (e: KeyboardEvent)=> {
 function createPopup(){
   const el = document.createElement("iframe");
   el.id = "urbit-visor-notes-everywhere-popup"
-  el.src = "chrome-extension://bjjppeimfgcdpcfffhkkfaigcjkihpdb/popup.html";
+  el.src = "chrome-extension://bjjppeimfgcdpcfffhkkfaigcjkihpdb/iframe.html";
   el.style.cssText = "height:100vh;width:100vw;position:fixed;top:0;left:0;"
   return el
 }

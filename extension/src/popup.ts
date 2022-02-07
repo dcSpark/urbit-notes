@@ -81,6 +81,7 @@ function saveNote() {
 }
 function close() {
   setTimeout(() => {
-    window.parent.postMessage("close_iframe", "*")
+    window.parent.postMessage("close_iframe", "*");
+    window.close();
   }, 2000);
 }
