@@ -9,13 +9,17 @@
   <body>
     <div id="background">
       <div id="popup">
-        <textarea></textarea>
+        <textarea id="textarea"></textarea>
         <button id="button">Save in Mars</button>
+        <button id="create-button">Create Channel</button>
       </div>
     </div>
     <script src="popup.js"></script>
   </body>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     #background {
       position: fixed;
       top: 0;
@@ -23,7 +27,19 @@
       height: 100vh;
       width: 100vw;
       background-color: rgb(0, 0, 0, 0.8);
-      z-index: 45000;
+      z-index: 2147483645;
+      display: none;
+    }
+    #welcome {
+      position: fixed;
+      background-color: white;
+      color: black;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2147483646;
+      width: 400px;
+      height: 300px;
       display: none;
     }
     #popup {
@@ -31,7 +47,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 50000;
+      z-index: 2147483646;
       width: 400px;
       height: 300px;
     }
@@ -52,6 +68,9 @@
       display: block;
       margin: 0.5rem auto;
       padding: 0.3rem;
+    }
+    #create-button {
+      display: none;
     }
   </style>
 </html>

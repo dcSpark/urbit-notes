@@ -269,8 +269,8 @@
           try {
             while ((n === void 0 || n-- > 0) && !(r = i.next()).done)
               ar.push(r.value);
-          } catch (error) {
-            e = { error };
+          } catch (error2) {
+            e = { error: error2 };
           } finally {
             try {
               if (r && !r.done && (m = i["return"]))
@@ -730,17 +730,17 @@
   var COMPLETE_NOTIFICATION = function() {
     return createNotification("C", void 0, void 0);
   }();
-  function errorNotification(error) {
-    return createNotification("E", void 0, error);
+  function errorNotification(error2) {
+    return createNotification("E", void 0, error2);
   }
   function nextNotification(value) {
     return createNotification("N", value, void 0);
   }
-  function createNotification(kind, value, error) {
+  function createNotification(kind, value, error2) {
     return {
       kind,
       value,
-      error
+      error: error2
     };
   }
 
@@ -754,10 +754,10 @@
       }
       cb();
       if (isRoot) {
-        var _a = context, errorThrown = _a.errorThrown, error = _a.error;
+        var _a = context, errorThrown = _a.errorThrown, error2 = _a.error;
         context = null;
         if (errorThrown) {
-          throw error;
+          throw error2;
         }
       }
     } else {
@@ -787,8 +787,8 @@
       }
       return _this;
     }
-    Subscriber2.create = function(next, error, complete) {
-      return new SafeSubscriber(next, error, complete);
+    Subscriber2.create = function(next, error2, complete) {
+      return new SafeSubscriber(next, error2, complete);
     };
     Subscriber2.prototype.next = function(value) {
       if (this.isStopped) {
@@ -841,13 +841,13 @@
   }(Subscription);
   var SafeSubscriber = function(_super) {
     __extends(SafeSubscriber2, _super);
-    function SafeSubscriber2(observerOrNext, error, complete) {
+    function SafeSubscriber2(observerOrNext, error2, complete) {
       var _this = _super.call(this) || this;
       var next;
       if (isFunction(observerOrNext)) {
         next = observerOrNext;
       } else if (observerOrNext) {
-        next = observerOrNext.next, error = observerOrNext.error, complete = observerOrNext.complete;
+        next = observerOrNext.next, error2 = observerOrNext.error, complete = observerOrNext.complete;
         var context_1;
         if (_this && config.useDeprecatedNextContext) {
           context_1 = Object.create(observerOrNext);
@@ -858,12 +858,12 @@
           context_1 = observerOrNext;
         }
         next = next === null || next === void 0 ? void 0 : next.bind(context_1);
-        error = error === null || error === void 0 ? void 0 : error.bind(context_1);
+        error2 = error2 === null || error2 === void 0 ? void 0 : error2.bind(context_1);
         complete = complete === null || complete === void 0 ? void 0 : complete.bind(context_1);
       }
       _this.destination = {
         next: next ? wrapForErrorHandling(next, _this) : noop,
-        error: wrapForErrorHandling(error !== null && error !== void 0 ? error : defaultErrorHandler, _this),
+        error: wrapForErrorHandling(error2 !== null && error2 !== void 0 ? error2 : defaultErrorHandler, _this),
         complete: complete ? wrapForErrorHandling(complete, _this) : noop
       };
       return _this;
@@ -941,9 +941,9 @@
       observable2.operator = operator;
       return observable2;
     };
-    Observable2.prototype.subscribe = function(observerOrNext, error, complete) {
+    Observable2.prototype.subscribe = function(observerOrNext, error2, complete) {
       var _this = this;
-      var subscriber = isSubscriber(observerOrNext) ? observerOrNext : new SafeSubscriber(observerOrNext, error, complete);
+      var subscriber = isSubscriber(observerOrNext) ? observerOrNext : new SafeSubscriber(observerOrNext, error2, complete);
       errorContext(function() {
         var _a = _this, operator = _a.operator, source = _a.source;
         subscriber.add(operator ? operator.call(subscriber, source) : source ? _this._subscribe(subscriber) : _this._trySubscribe(subscriber));
@@ -1700,27 +1700,89 @@
   // src/popup.ts
   var myShip = "";
   document.addEventListener("keydown", (e) => {
-    console.log(e, "listener");
     if (e.altKey && e.code === "Comma")
       window.parent.postMessage("close_iframe", "*");
     if (e.code === "Escape")
       window.parent.postMessage("remove_iframe", "*");
   });
   var iframe = document.getElementById("background");
+  var popup = document.getElementById("popup");
+  var textarea = document.getElementById("textarea");
   var button = document.getElementById("button");
+  var createButton = document.getElementById("create-button");
   button.addEventListener("click", saveNote);
+  createButton.addEventListener("click", createChannel);
   function initiateVisor() {
     urbitVisor.registerName("Urbit Notes Everywhere");
-    urbitVisor.require(["shipName", "poke"], setData);
+    urbitVisor.require(["shipName", "scry", "poke", "thread"], setData);
   }
   function setData() {
     urbitVisor.getShip().then((res) => {
+      console.log(res.response, "r");
       myShip = res.response;
       if (iframe)
         iframe.style.display = "block";
+      checkChannelExists(res.response);
     });
   }
   initiateVisor();
+  function checkChannelExists(ship) {
+    urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
+      if (res.status === "ok") {
+        const keys = res.response["graph-update"].keys;
+        const haveKey = !!keys.find((key) => key.ship === ship && key.name === "my-urbit-notes");
+        if (haveKey)
+          allow();
+        else
+          disallow();
+      } else
+        error();
+    });
+  }
+  function allow() {
+  }
+  function disallow() {
+    textarea.value = `
+  Welcome to Urbit Notes Everywhere
+  It appears you don't have an Urbit Notes Notebook yet
+  Click the button below to create it
+  `;
+    button.style.display = "none";
+    createButton.style.display = "block";
+  }
+  function error() {
+    button.innerText = "Error";
+    button.disabled = true;
+  }
+  async function createChannel() {
+    console.log("creating channel");
+    const body = {
+      create: {
+        resource: {
+          ship: `~${myShip}`,
+          name: "my-urbit-notes"
+        },
+        title: "My Urbit Notes",
+        description: "My Awesome Private Urbit Notebook",
+        associated: {
+          policy: {
+            invite: { pending: [] }
+          }
+        },
+        module: "publish",
+        mark: "graph-validator-publish"
+      }
+    };
+    urbitVisor.thread({
+      threadName: "graph-create",
+      inputMark: "landscape/graph-view-action",
+      outputMark: "json",
+      body
+    }).then((res) => {
+      if (res.status === "ok")
+        checkChannelExists(myShip);
+    });
+  }
   function makeIndex() {
     const DA_UNIX_EPOCH = BigInt("170141184475152167957503069145530368000");
     const DA_SECOND = BigInt("18446744073709551616");
@@ -1777,7 +1839,9 @@
   function saveNote() {
     const [title, text] = extractText();
     const body = buildNotebookPost(title, text);
+    console.log("saving note, in theory");
     urbitVisor.poke({ app: "graph-store", mark: "graph-update-3", json: body }).then((res) => {
+      console.log(res, "poked");
       button.disabled = true;
       if (res.status === "ok")
         button.innerText = "OK", close();

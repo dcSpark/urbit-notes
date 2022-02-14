@@ -9,8 +9,9 @@
   <body>
     <div id="popup">
       <h3>Urbit Notes Everywhere</h3>
-      <textarea></textarea>
+      <textarea id="textarea"></textarea>
       <button id="button">Save in Mars</button>
+      <button id="create-button">Create Channel</button>
     </div>
     <script src="popup.js"></script>
   </body>
@@ -40,6 +41,9 @@
       display: block;
       margin: 0.5rem auto;
       padding: 0.3rem;
+    }
+    #create-button {
+      display: none;
     }
   </style>
 </html>
