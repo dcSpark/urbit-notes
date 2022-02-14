@@ -1699,6 +1699,14 @@
 
   // src/popup.ts
   var myShip = "";
+  document.addEventListener("keydown", (e) => {
+    console.log(e, "listener");
+    if (e.altKey && e.code === "Comma")
+      window.parent.postMessage("close_iframe", "*");
+    if (e.code === "Escape")
+      window.parent.postMessage("remove_iframe", "*");
+  });
+  var iframe = document.getElementById("background");
   var button = document.getElementById("button");
   button.addEventListener("click", saveNote);
   function initiateVisor() {
@@ -1706,7 +1714,11 @@
     urbitVisor.require(["shipName", "poke"], setData);
   }
   function setData() {
-    urbitVisor.getShip().then((res) => myShip = res.response);
+    urbitVisor.getShip().then((res) => {
+      myShip = res.response;
+      if (iframe)
+        iframe.style.display = "block";
+    });
   }
   initiateVisor();
   function makeIndex() {

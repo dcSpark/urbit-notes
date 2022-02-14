@@ -1,6 +1,8 @@
 document.addEventListener("keydown", (e) => {
   if (e.altKey && e.code === "Comma")
     toggleFrame();
+  if (e.code === "Escape")
+    removeFrame();
 });
 function createFrame() {
   const el = document.createElement("iframe");
@@ -18,7 +20,14 @@ function toggleFrame() {
   else
     document.body.removeChild(existingPopup);
 }
+function removeFrame() {
+  const existingPopup = document.getElementById("urbit-visor-notes-everywhere-popup");
+  if (existingPopup)
+    document.body.removeChild(existingPopup);
+}
 window.addEventListener("message", (m) => {
   if (m.data === "close_iframe")
     toggleFrame();
+  else if (m.data === "remove_iframe")
+    removeFrame();
 });
