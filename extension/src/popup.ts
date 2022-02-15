@@ -9,7 +9,6 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 });
 
 const iframe = document.getElementById("background");
-const popup = document.getElementById("popup");
 const textarea = <HTMLTextAreaElement>document.getElementById("textarea");
 const button = <HTMLButtonElement>document.getElementById("button");
 const createButton = <HTMLButtonElement>(
@@ -47,7 +46,11 @@ function checkChannelExists(ship: string) {
   });
 }
 
-function allow() {}
+function allow(){
+  textarea.value = "";
+  createButton.style.display = "none";
+  button.style.display = "block";
+}
 function disallow() {
   textarea.value = `
   Welcome to Urbit Notes Everywhere
@@ -62,8 +65,7 @@ function error() {
   button.disabled = true;
 }
 async function createChannel() {
-  console.log("creating channel")
-  const body = {
+=  const body = {
     create: {
       resource: {
         ship: `~${myShip}`,
@@ -148,11 +150,9 @@ function extractText(): [string, string] {
 function saveNote() {
   const [title, text] = extractText();
   const body = buildNotebookPost(title, text);
-  console.log("saving note, in theory")
   urbitVisor
     .poke({ app: "graph-store", mark: "graph-update-3", json: body })
     .then((res) => {
-      console.log(res,  "poked")
       button.disabled = true;
       if (res.status === "ok") (button.innerText = "OK"), close();
       else button.innerText = "Error";

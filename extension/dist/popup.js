@@ -1706,7 +1706,6 @@
       window.parent.postMessage("remove_iframe", "*");
   });
   var iframe = document.getElementById("background");
-  var popup = document.getElementById("popup");
   var textarea = document.getElementById("textarea");
   var button = document.getElementById("button");
   var createButton = document.getElementById("create-button");
@@ -1728,6 +1727,7 @@
   initiateVisor();
   function checkChannelExists(ship) {
     urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
+      console.log(res, "wut");
       if (res.status === "ok") {
         const keys = res.response["graph-update"].keys;
         const haveKey = !!keys.find((key) => key.ship === ship && key.name === "my-urbit-notes");
@@ -1740,6 +1740,9 @@
     });
   }
   function allow() {
+    textarea.value = "";
+    createButton.style.display = "none";
+    button.style.display = "block";
   }
   function disallow() {
     textarea.value = `
@@ -1779,6 +1782,7 @@
       outputMark: "json",
       body
     }).then((res) => {
+      console.log(res, "thread called");
       if (res.status === "ok")
         checkChannelExists(myShip);
     });
@@ -1839,9 +1843,7 @@
   function saveNote() {
     const [title, text] = extractText();
     const body = buildNotebookPost(title, text);
-    console.log("saving note, in theory");
     urbitVisor.poke({ app: "graph-store", mark: "graph-update-3", json: body }).then((res) => {
-      console.log(res, "poked");
       button.disabled = true;
       if (res.status === "ok")
         button.innerText = "OK", close();
