@@ -1727,7 +1727,6 @@
   initiateVisor();
   function checkChannelExists(ship) {
     urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
-      console.log(res, "wut");
       if (res.status === "ok") {
         const keys = res.response["graph-update"].keys;
         const haveKey = !!keys.find((key) => key.ship === ship && key.name === "my-urbit-notes");
@@ -1758,7 +1757,6 @@
     button.disabled = true;
   }
   async function createChannel() {
-    console.log("creating channel");
     const body = {
       create: {
         resource: {
@@ -1782,7 +1780,6 @@
       outputMark: "json",
       body
     }).then((res) => {
-      console.log(res, "thread called");
       if (res.status === "ok")
         checkChannelExists(myShip);
     });

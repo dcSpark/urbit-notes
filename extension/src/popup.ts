@@ -46,7 +46,7 @@ function checkChannelExists(ship: string) {
   });
 }
 
-function allow(){
+function allow() {
   textarea.value = "";
   createButton.style.display = "none";
   button.style.display = "block";
@@ -65,7 +65,7 @@ function error() {
   button.disabled = true;
 }
 async function createChannel() {
-=  const body = {
+  const body = {
     create: {
       resource: {
         ship: `~${myShip}`,
