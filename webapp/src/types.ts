@@ -7,7 +7,7 @@ export interface Node{
   children: Graph
 }
 export interface Post {
-  index: number
+  index: bigint
   contents: Content[];
   author: string;
   date: Date;
