@@ -72,12 +72,12 @@ function Notebook(props: NotebookProps) {
   };
   function addNotebookPost() {
     setLoading(true);
-    const indexes: number[] = graphToList(posts).map((p) => p.index);
-    const last: number = indexes.reduce(
-      (acc: number, cur: number) => (acc > cur ? acc : cur),
-      0
+    const indexes: bigint[] = graphToList(posts).map((p) => p.index);
+    const last: bigint = indexes.reduce(
+      (acc: bigint, cur: bigint) => (acc > cur ? acc : cur),
+      0n
     );
-    const index = `/${last + 1}`;
+    const index = `/${last + 1n}`.replace("n", "");
     const contents = [{ text: title }, { text: text }];
     const children = {
       "1": {
@@ -155,6 +155,7 @@ function Notebook(props: NotebookProps) {
   }
 
   function handleAddNodes(data: any) {
+    console.log(data, "data added")
     setLoading(false);
     if (Object.keys(data.nodes)[0].split("/").length > 3)
       //  if it's an update an edited post, go update the post
@@ -168,6 +169,7 @@ function Notebook(props: NotebookProps) {
   }
 
   function graphToList(graph: Graph): Post[] {
+    console.log(graph, "graph")
     const nodes = Object.keys(graph).map((index) => graph[index]);
     const notDeleted = nodes.filter((node) => typeof node.post !== "string"); // filter out deleted posts
     return notDeleted
@@ -179,7 +181,7 @@ function Notebook(props: NotebookProps) {
         );
         const indexString = revisions[last].post.index.split("/")[1];
         return {
-          index: parseInt(indexString),
+          index: BigInt(indexString),
           contents: revisions[last].post.contents,
           author: revisions[last].post.author,
           date: revisions[last].post["time-sent"],
@@ -235,7 +237,7 @@ function Notebook(props: NotebookProps) {
           </div>
         </div>
         {graphToList(posts).map((post: Post) => {
-          return <PostPreview key={post.index} post={post} select={select} />;
+          return <PostPreview key={`${post.index}`} post={post} select={select} />;
         })}
       </div>
     </div>
